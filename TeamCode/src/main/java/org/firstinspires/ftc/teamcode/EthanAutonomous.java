@@ -84,7 +84,7 @@ import java.util.List;
  * is explained below.
  */
 
-@Autonomous(name="Concept: Vuforia Navigation", group ="Concept")
+@Autonomous(group ="Concept")
 public class EthanAutonomous extends LinearOpMode {
 
     public static final String TAG = "Vuforia Sample";
@@ -123,7 +123,7 @@ public class EthanAutonomous extends LinearOpMode {
          */
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(com.qualcomm.ftcrobotcontroller.R.id.cameraMonitorViewId);
         parameters.vuforiaLicenseKey = "Ae4bn1n/////AAAAGUB2l6bUfkZVny2Q0jaLYIIKoUC+uWr6iohCfs1afyuNIj+MEulVW0XJYqxXl+uxWNp7NhbPu4JpnvE0ihnUCT+Zop08Zs2xxzOHOZpbhiVN9qIXypUAzJjj2fIGsjfhgzxRRlcU1di6VtRRjINxBV9d1HXtR67wB4OdYEmHiqLDh0fZ3uXaNIKG6tISezLaa32TJJXOIIlkTTxlCf2ER+kTUYfBn8AKKMy/FQ+bIFkl+6zWVC95qfOc1+WybBBgBYcYL966AzUZWAi38sgw1TS7jymeLQNiJRt7RCDJ+aiVgFM3WZhkbu0pDu0e1sehKTsJejwkBWYLMVz8UeEGuesc6hrhiVjZdUYRZjJoOmD1";
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
         /**
@@ -318,10 +318,13 @@ public class EthanAutonomous extends LinearOpMode {
                 telemetry.addData("Pos", "Unknown");
             }
             telemetry.update();
-            Servo servo = null;
-            DcMotor leftMotor = null;
-            DcMotor rightMotor = null;
-            servo.setPosition(1);
+            Servo leftServoBeacon;
+            DcMotor leftMotorDriving;
+            DcMotor rightMotorDriving;
+            leftServoBeacon = hardwareMap.servo.get("beacon left servo");
+            leftMotorDriving  = hardwareMap.dcMotor.get("left motor");
+            rightMotorDriving = hardwareMap.dcMotor.get("right motor");
+            leftServoBeacon.setPosition(1);
             long endTime = System.currentTimeMillis() + 30000;
             while(System.currentTimeMillis() < endTime){
                 String coordinatesString = format(blueTargetLocationOnField);
@@ -331,16 +334,16 @@ public class EthanAutonomous extends LinearOpMode {
                     coordinates[i] = Integer.parseInt(coordinatesStringArray[i]);
                 }
                 if(coordinates[2] > 95){
-                    leftMotor.setPower(0.75);
-                    rightMotor.setPower(0.25);
+                    leftMotorDriving.setPower(0.75);
+                    rightMotorDriving.setPower(0.25);
                 }else{
                     if(coordinates[2] < 85){
-                        leftMotor.setPower(0.25);
-                        rightMotor.setPower(0.75);
+                        leftMotorDriving.setPower(0.25);
+                        rightMotorDriving.setPower(0.75);
                     }
                     else{
-                        leftMotor.setPower(0.5);
-                        rightMotor.setPower(0.5);
+                        leftMotorDriving.setPower(0.5);
+                        rightMotorDriving.setPower(0.5);
                     }
 
                 }
