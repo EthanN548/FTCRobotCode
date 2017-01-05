@@ -333,22 +333,28 @@ public class EthanAutonomous2 extends LinearOpMode {
                 String[] coordinatesStringArray = coordinatesString.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(",");
                 int[] coordinates = new int[coordinatesStringArray.length];
                 for (int i = 0; i < coordinatesStringArray.length; i++) {
-                    coordinates[i] = Integer.parseInt(coordinatesStringArray[i]);
+                    try {
+                        coordinates[i] = Integer.parseInt(coordinatesStringArray[i]);
+                    }
+                    catch( Exception e ) {
+                        coordinates[i] = 0;
+                    }
                 }
-                if(coordinates[2] > 95){
+                if(coordinates[0] == 0){
+                    leftMotorDriving.setPower(0.5);
+                    rightMotorDriving.setPower(0);
+                }
+                else if(coordinates[0] > 95){
                     leftMotorDriving.setPower(0.75);
                     rightMotorDriving.setPower(0.25);
                 }else{
-                    if(coordinates[2] < 85){
+                    if(coordinates[0] < 85){
                         leftMotorDriving.setPower(0.25);
                         rightMotorDriving.setPower(0.75);
                     }
-                    if(95 > coordinates[2] && coordinates[2] > 85){
+                    else{
                         leftMotorDriving.setPower(0.5);
                         rightMotorDriving.setPower(0.5);
-                    }else{
-                        leftMotorDriving.setPower(0.5);
-                        rightMotorDriving.setPower(0);
                     }
 
                 }
